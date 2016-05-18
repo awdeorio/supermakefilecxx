@@ -13,42 +13,47 @@
 # Build the top level executable
 # $ make
 #
-# Run system tests, unit tests, or both
-# $ make systemtest
-# $ make unittest
-# $ make test
+# Regression testing
+# $ make unittest                   # Run unit tests
+# $ make systemtest                 # Run system tests
+# $ make test                       # Run regression (unit and system) tests
+# $ make Forward_list_test.out      # Run one unit test
+# $ less Forward_list_test.out      # See output of one unit test 
+# $ make test00.diff.txt            # Run one system test
+# $ less test00.out                 # See output of one system test
+# $ less test00.diff.txt            # See differences from one system test
 #
 # Debugging
-# $ make clean
-# $ make debug Binary_tree_test
-# $ gdb Binary_tree_test
-# $ make debug main
-#
-# Comparing system test output
-# $ make test00.diff.txt
-# $ less test00.diff.txt
+# $ make clean                      # Remove files built without debug flags
+# $ make debug Forward_list_test    # Build one unit test with debug flags
+# $ gdb Forward_list_test           # Debug one unit test
+# $ make debug main                 # Build "main" application with debug flags
+# $ gdb main                        # Debug "main" application
+# $ make debug test                 # Run regression test with debug flags
 #
 # Faster compilation using parallel processes, works with any call to make
-# $ make -j4 test      # Run all tests, using 4 parallel processes
+# $ make -j4 test                   # Run all tests using 4 parallel processes
 #
 # Checking for memory leaks
 # $ make clean
 # $ make valgrind test
 # $ make valgrind test00.valgrind.out
-# $ make valgrind Binary_tree_test.valgrind.out
+# $ less test00.valgrind.out
+# $ make valgrind Forward_list_test.valgrind.out
+# $ less Forward_list_test.valgrind.out
 #
 # Profiling
 # $ make clean
 # $ make profile test00.out
 # $ less analysis.txt
 # $ make profile test00.out test01.out  # Don't do this
-# $ make profile Binary_tree_test       # Don't do this
+# $ make profile Forward_list_tes       # Don't do this
 #
 # Coverage
-# $ make clean
 # $ make coverage test00.out
-# $ make coverage Set_test
+# $ make coverage Forward_list_test
 # $ make coverage test
+# $ make coverage unittest
 # $ make debug coverage test
 #
 # Distribution
@@ -165,7 +170,8 @@ test : unittest systemtest
 
 # Compare the output of one system test
 %.passed %.diff.txt : %.out %.out.correct
-	sdiff $*.out $*.out.correct > $*.diff.txt
+	@echo "sdiff $*.out $*.out.correct" > $*.diff.txt
+	sdiff $*.out $*.out.correct >> $*.diff.txt
 	touch $*.passed
 
 # Helpful error message for system tests
@@ -213,7 +219,7 @@ profile : analysis.txt
 
 # Run profiling analysis
 analysis.txt :
-	@[ -f gmon.out ] || echo "Error: can't find gmon.out.  Did you run a test execution?  For example, $ make coverage test00.out"
+	@[ -f gmon.out ] || echo "Error: can't find gmon.out.  Did you run a test execution?  For example, $ make profile test00.out"
 	@[ -f gmon.out ] || false
 	$(GPROF) $(EXECUTABLE) gmon.out > analysis.txt
 
