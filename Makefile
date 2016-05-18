@@ -48,9 +48,8 @@
 # $ make dist
 #
 # Customizing the compiler
-# CXX ?= g++-5.1                            # In the Makefile
 # $ CXX=g++-5.1 make                        # One time
-# $ export CXX=g++-5.1                      # Until you log out
+# $ export CXX=g++-5.1                      # Until you log out (bash shell)
 # $ echo "export CXX=g++-5.1" >> ~/.bashrc  # Forever (bash shell)
 
 
@@ -91,8 +90,9 @@ CXXFLAGS += -c
 LDFLAGS :=
 
 # Other tools
-GCOV := gcov --relative-only
-GPROF := gprof
+GCOV ?= gcov --relative-only
+GPROF ?= gprof
+
 
 ################################################################################
 # Regression test
