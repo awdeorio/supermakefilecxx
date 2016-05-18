@@ -10,6 +10,14 @@
 # - Unit test filenames look like *_test.cpp
 # - System test input and output files look like *.in and *.out.correct
 #
+# Build the top level executable
+# $ make
+#
+# Run system tests, unit tests, or both
+# $ make systemtest
+# $ make unittest
+# $ make test
+#
 # Debugging
 # $ make clean
 # $ make debug Binary_tree_test
@@ -75,7 +83,8 @@ LD ?= g++
 # -Wall              Enable many warning flags
 # -Wextra            Enable more warning flags
 # -Wconversion       Warn for implicit conversions that may alter a value
-# -Wsign-conversion  Warn for implicit conversions that may change the sign of an integer value
+# -Wsign-conversion  Warn for implicit conversions that may change the sign of
+#                    an integer value
 # -Werror            Make all warnings into errors
 # -O3                Optimization
 # -DNDEBUG           Disable assert statements (like #define NDEBUG)
@@ -86,7 +95,7 @@ CXXFLAGS += -O3 -DNDEBUG
 CXXFLAGS += -c
 
 # Linker flags
-# Include libraries here, if needed.  For example, -lm 
+# Include libraries here, if needed.  For example, -lm
 LDFLAGS :=
 
 # Other tools
@@ -119,13 +128,19 @@ $(SYSTEM_TEST_PASSED_FILES) : $(SYSTEM_TEST_OUTPUT_FILES)
 
 # Run unit tests
 # NOTE: We need to call make again because the UNIT_TEST variable
-# may have changed.  For example, this occurs with "make valgrind unittest".
+# may have changed.  For example, this occurs with "make valgrind unittest". If
+# the UNIT_TEST variable *did not* change, we could do it this way:
+# unittest : CXXFLAGS := $(filter-out -DNDEBUG, $(CXXFLAGS))
+# unittest : $(UNIT_TEST)
+# unittest : $(filter-out unittest, $(MAKECMDGOALS))
+#
+# NOTE: We need to filter out -DNDEBUG to avoid asserts being disabled
 unittest :
-	$(MAKE) $(filter-out test unittest, $(MAKECMDGOALS)) $(UNIT_TEST)
+	$(MAKE) CXXFLAGS="$(filter-out -DNDEBUG, $(CXXFLAGS))" $(filter-out test unittest, $(MAKECMDGOALS)) $(UNIT_TEST)
 
 # Run system tests
 systemtest :
-	$(MAKE) $(filter-out test systemtest, $(MAKECMDGOALS)) $(SYSTEM_TEST)
+	$(MAKE) CXXFLAGS="$(filter-out -DNDEBUG, $(CXXFLAGS))" $(filter-out test systemtest, $(MAKECMDGOALS)) $(SYSTEM_TEST)
 
 # Run regression test
 test : unittest systemtest
@@ -261,14 +276,14 @@ ALL_HEADERS := $(wildcard *.h)
 $(ALL_OBJECTS) : $(ALL_HEADERS)
 
 # Dependencies for linking each executable
-# 
+#
 # Best solution: write one rule for every .cpp file containing a main()
 # function.  This is usually a top-level program, and several unit tests. For
 # example:
 # Binary_tree_test: Binary_tree_test.o
 # Set_test: Set_test.o
 # main: main.o
-# 
+#
 # HACK: we'll use a rule with more dependencies than we necessary.  All
 # executables depend on all support objects.  Support objects are .o files
 # compiled from .cpp files that are not top level executables or unit tests.
