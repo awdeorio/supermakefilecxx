@@ -81,7 +81,7 @@ all : $(EXECUTABLE)
 CXX ?= g++
 
 # Linker
-LD ?= g++
+LD := $(CXX)
 
 # Compiler flags
 # -std=c++14         C++ 14 standard
