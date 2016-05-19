@@ -5,70 +5,7 @@
 #
 # Andrew DeOrio <awdeorio@umich.edu>
 #
-# A few assumptions:
-# - You have one "main" application and a number of unit test executables.
-# - Unit test filenames look like *test*.cpp
-# - Custom test filenames look like *test*.sh
-# - System test input and output files look like *.in and *.out.correct
-#
-# Build the top level executable
-# $ make
-#
-# Regression testing
-# $ make unittest                   # Run unit tests
-# $ make systemtest                 # Run system tests
-# $ make test                       # Run regression (unit and system) tests
-# $ make Forward_list_test.out      # Run one unit test
-# $ less Forward_list_test.out      # See output of one unit test 
-# $ make test00.diff.txt            # Run one system test
-# $ less test00.out                 # See output of one system test
-# $ less test00.diff.txt            # See differences from one system test
-#
-# Debugging
-# $ make clean                      # Remove files built without debug flags
-# $ make debug Forward_list_test    # Build one unit test with debug flags
-# $ gdb Forward_list_test           # Debug one unit test
-# $ make debug main                 # Build "main" application with debug flags
-# $ gdb main                        # Debug "main" application
-# $ make debug test                 # Run regression test with debug flags
-#
-# Faster compilation using parallel processes, works with any call to make
-# $ make -j4 test                   # Run all tests using 4 parallel processes
-#
-# Checking for memory leaks
-# $ make clean
-# $ make valgrind test
-# $ make valgrind test00.valgrind.out
-# $ less test00.valgrind.out
-# $ make valgrind Forward_list_test.valgrind.out
-# $ less Forward_list_test.valgrind.out
-#
-# Profiling
-# $ make clean
-# $ make profile test00.out
-# $ less analysis.txt
-# $ make profile test00.out test01.out  # Don't do this
-# $ make profile Forward_list_tes       # Don't do this
-#
-# Coverage
-# $ make coverage test00.out
-# $ make coverage Forward_list_test
-# $ make coverage test
-# $ make coverage unittest
-# $ make debug coverage test
-#
-# Distribution
-# $ make distclean
-# $ make dist
-#
-# Customizing the compiler
-# $ CXX=g++-5.1 make                        # One time
-# $ export CXX=g++-5.1                      # Until you log out (bash shell)
-# $ echo "export CXX=g++-5.1" >> ~/.bashrc  # Forever (bash shell)
-
-
-################################################################################
-# Configuration
+# For documentaiton, see https://github.com/awdeorio/supermakefilecxx
 
 # Top level executable (should correspond to a cpp file with the same name)
 EXECUTABLE := main
@@ -109,18 +46,21 @@ GCOV ?= gcov --relative-only
 GPROF ?= gprof
 VALGRIND ?= valgrind --leak-check=full
 
+# Your tests
+UNIT_TEST_SOURCES := $(wildcard *test*.cpp)
+SYSTEM_TEST_INPUT_FILES := $(wildcard *.in)
+CUSTOM_TEST_SCRIPT_FILES := $(wildcard *test*.sh)
+
 
 ################################################################################
 # Regression test
 
 # List of custom test script and output files
-CUSTOM_TEST_SCRIPT_FILES := $(wildcard *test*.sh)
 CUSTOM_TEST_OUTPUT_FILES := $(CUSTOM_TEST_SCRIPT_FILES:%.sh=%.out)
 CUSTOM_TEST_PASSED_FILES := $(CUSTOM_TEST_SCRIPT_FILES:%.sh=%.passed)
 CUSTOM_TEST := $(CUSTOM_TEST_PASSED_FILES)
 
 # List of unit test .cpp files, output files and executables
-UNIT_TEST_SOURCES := $(wildcard *test*.cpp)
 UNIT_TEST_OUTPUT_FILES := $(UNIT_TEST_SOURCES:%.cpp=%.out)
 UNIT_TEST_EXECUTABLES := $(UNIT_TEST_SOURCES:%.cpp=%)
 UNIT_TEST_PASSED_FILES := $(UNIT_TEST_SOURCES:%.cpp=%.passed)
@@ -129,7 +69,6 @@ UNIT_TEST_NOLEAK_FILES := $(UNIT_TEST_SOURCES:%.cpp=%.noleak)
 UNIT_TEST := $(UNIT_TEST_PASSED_FILES)
 
 # List of system test input and output files
-SYSTEM_TEST_INPUT_FILES := $(wildcard *.in)
 SYSTEM_TEST_OUTPUT_FILES := $(SYSTEM_TEST_INPUT_FILES:%.in=%.out)
 SYSTEM_TEST_PASSED_FILES := $(SYSTEM_TEST_INPUT_FILES:%.in=%.passed)
 SYSTEM_TEST_VALGRIND_FILES := $(SYSTEM_TEST_INPUT_FILES:%.in=%.valgrind.out)
