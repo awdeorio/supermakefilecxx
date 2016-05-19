@@ -107,6 +107,7 @@ LDFLAGS :=
 # Other tools
 GCOV ?= gcov --relative-only
 GPROF ?= gprof
+VALGRIND ?= valgrind --leak-check=full
 
 
 ################################################################################
@@ -215,7 +216,6 @@ valgrind : debug
 valgrind : SYSTEM_TEST += $(SYSTEM_TEST_NOLEAK_FILES)
 valgrind : UNIT_TEST += $(UNIT_TEST_NOLEAK_FILES)
 valgrind : $(filter-out valgrind, $(MAKECMDGOALS))
-VALGRIND := valgrind --leak-check=full
 
 # Check valgrind output for leaks
 # NOTE: see the Regression Test for targets that run unit and system tests
