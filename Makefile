@@ -155,6 +155,7 @@ systemtest :
 	$(MAKE) CXXFLAGS="$(filter-out -DNDEBUG, $(CXXFLAGS))" $(filter-out test systemtest, $(MAKECMDGOALS)) $(SYSTEM_TEST)
 
 # Run custom tests
+customtest : CXXFLAGS := $(filter-out -DNDEBUG, $(CXXFLAGS))
 customtest : $(CUSTOM_TEST)
 
 # Run regression test
