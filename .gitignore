@@ -1,0 +1,15 @@
+*.o
+*~
+*.out
+*.gch
+*.passed
+*.gcov
+*.gcno
+*.gcda
+*.diff.txt
+analysis.txt
+*.noleak
+*.dSYM/
+Forward_list_test
+util_test
+main
