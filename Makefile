@@ -32,7 +32,7 @@ LD := $(CXX)
 # -O3                Optimization
 # -DNDEBUG           Disable assert statements (like #define NDEBUG)
 # -c                 Don't run linker
-CXXFLAGS := -std=c++11 -pedantic -Wall -Wextra -Werror #FIXME c++14
+CXXFLAGS := -std=c++11 -pedantic -Wall -Wextra -Werror
 CXXFLAGS += -Wconversion -Wsign-conversion
 CXXFLAGS += -O3 -DNDEBUG
 CXXFLAGS += -c
