@@ -8,6 +8,7 @@
 # A few assumptions:
 # - You have one "main" application and a number of unit test executables.
 # - Unit test filenames look like *test*.cpp
+# - Custom test filenames look like *test*.sh
 # - System test input and output files look like *.in and *.out.correct
 #
 # Build the top level executable
@@ -111,6 +112,12 @@ GPROF ?= gprof
 ################################################################################
 # Regression test
 
+# List of custom test script and output files
+CUSTOM_TEST_SCRIPT_FILES := $(wildcard *test*.sh)
+CUSTOM_TEST_OUTPUT_FILES := $(CUSTOM_TEST_SCRIPT_FILES:%.sh=%.out)
+CUSTOM_TEST_PASSED_FILES := $(CUSTOM_TEST_SCRIPT_FILES:%.sh=%.passed)
+CUSTOM_TEST := $(CUSTOM_TEST_PASSED_FILES)
+
 # List of unit test .cpp files, output files and executables
 UNIT_TEST_SOURCES := $(wildcard *test*.cpp)
 UNIT_TEST_OUTPUT_FILES := $(UNIT_TEST_SOURCES:%.cpp=%.out)
@@ -147,8 +154,16 @@ unittest :
 systemtest :
 	$(MAKE) CXXFLAGS="$(filter-out -DNDEBUG, $(CXXFLAGS))" $(filter-out test systemtest, $(MAKECMDGOALS)) $(SYSTEM_TEST)
 
+# Run custom tests
+customtest : $(CUSTOM_TEST)
+
 # Run regression test
 test : unittest systemtest customtest
+
+# Run one custom test
+%.out %.passed : %.sh $(EXECUTABLE)
+	sh $< > $*.out 2>&1
+	touch $*.passed
 
 # Run one unit test
 %.out %.passed : %
@@ -331,7 +346,8 @@ distclean : clean
 	rm -vf $(DIST_OUTPUT_FILE)
 
 # These targets do not create any files
-.PHONY : all debug profile clean distclean test depends dist run_gcov unittest systemtest
+.PHONY : all debug profile clean distclean test depends dist run_gcov \
+  unittest systemtest customtest
 
 # Preserve intermediate files
 .SECONDARY:

@@ -18,7 +18,13 @@
 #include <iostream>
 using namespace std;
 
-int main() {
+int main(int argc, char **argv) {
+
+  // check command line arguments (there should be none)
+  if (argc > 1) {
+    cerr << "Usage: " << argv[0] << "\n";
+    exit(1);
+  }
 
   // Read inputs into a list.  It is unecessary, but the point is to
   // demonstrate an application that uses libraries and inputs.
