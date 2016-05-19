@@ -7,7 +7,7 @@
 #
 # A few assumptions:
 # - You have one "main" application and a number of unit test executables.
-# - Unit test filenames look like *_test.cpp
+# - Unit test filenames look like *test*.cpp
 # - System test input and output files look like *.in and *.out.correct
 #
 # Build the top level executable
@@ -112,7 +112,7 @@ GPROF ?= gprof
 # Regression test
 
 # List of unit test .cpp files, output files and executables
-UNIT_TEST_SOURCES := $(wildcard *test.cpp)
+UNIT_TEST_SOURCES := $(wildcard *test*.cpp)
 UNIT_TEST_OUTPUT_FILES := $(UNIT_TEST_SOURCES:%.cpp=%.out)
 UNIT_TEST_EXECUTABLES := $(UNIT_TEST_SOURCES:%.cpp=%)
 UNIT_TEST_PASSED_FILES := $(UNIT_TEST_SOURCES:%.cpp=%.passed)
@@ -148,11 +148,11 @@ systemtest :
 	$(MAKE) CXXFLAGS="$(filter-out -DNDEBUG, $(CXXFLAGS))" $(filter-out test systemtest, $(MAKECMDGOALS)) $(SYSTEM_TEST)
 
 # Run regression test
-test : unittest systemtest
+test : unittest systemtest customtest
 
 # Run one unit test
 %.out %.passed : %
-	./$< > $*.out
+	./$< > $*.out 2>&1
 	touch $*.passed
 
 # Run one unit test with valgrind
@@ -162,7 +162,7 @@ test : unittest systemtest
 
 # Run one system test and save output
 %.out : %.in $(EXECUTABLE)
-	./$(EXECUTABLE) < $*.in > $*.out
+	./$(EXECUTABLE) < $*.in > $*.out 2>&1
 
 # Run one system test with valgrind and save output
 %.valgrind.out : %.in $(EXECUTABLE)
@@ -171,7 +171,7 @@ test : unittest systemtest
 # Compare the output of one system test
 %.passed %.diff.txt : %.out %.out.correct
 	@echo "sdiff $*.out $*.out.correct" > $*.diff.txt
-	sdiff $*.out $*.out.correct >> $*.diff.txt
+	sdiff $*.out $*.out.correct >> $*.diff.txt 2>&1
 	touch $*.passed
 
 # Helpful error message for system tests
