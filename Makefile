@@ -21,7 +21,7 @@ CXX ?= g++
 LD := $(CXX)
 
 # Compiler flags
-# -std=c++14         C++ 14 standard
+# -std=c++11         C++ 11 standard
 # -pedantic          Strict ISO C++
 # -Wall              Enable many warning flags
 # -Wextra            Enable more warning flags
