@@ -6,7 +6,7 @@ Andrew DeOrio <awdeorio@umich.edu>
 # Quickstart
 Download the latest version of this `Makefile` into your own project:
 ```
-wget --no-check-certificate https://raw.githubusercontent.com/awdeorio/supermakefilecxx/master/Makefile
+wget --no-check-certificate https://raw.githubusercontent.com/awdeorio/supermakefilecxx/master/Makefile -O Makefile
 make test
 ```
 
