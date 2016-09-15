@@ -37,7 +37,7 @@ Regression testing
 make unittest                   # Run unit tests
 make systemtest                 # Run system tests
 make customtest                 # Run custom tests
-make test                       # Run regression (unit and system) tests
+make test                       # Run regression (unit, system and custom) tests
 make Forward_list_test.out      # Run one unit test
 less Forward_list_test.out      # See output of one unit test 
 make test00.diff.txt            # Run one system test
@@ -76,7 +76,7 @@ make clean
 make profile test00.out
 less analysis.txt
 make profile test00.out test01.out  # Don't do this
-make profile Forward_list_tes       # Don't do this
+make profile Forward_list_test      # Don't do this
 ```
 
 Coverage
