@@ -99,7 +99,10 @@ customtest : CXXFLAGS := $(filter-out -DNDEBUG, $(CXXFLAGS))
 customtest : $(CUSTOM_TEST)
 
 # Run regression test
-test : unittest systemtest customtest
+test :
+	$(MAKE) CXXFLAGS="$(filter-out -DNDEBUG, $(CXXFLAGS))" \
+    $(filter-out test unittest systemtest customtest, $(MAKECMDGOALS)) \
+    $(UNIT_TEST) $(SYSTEM_TEST) $(CUSTOM_TEST)
 
 # Run one custom test
 %.out %.passed : %.sh $(EXECUTABLE)
