@@ -5,5 +5,5 @@
 # Customize compiler and coverage using these environment variables
 # $ source bashrc
 
-export CXX=g++-5
-export GCOV="gcov-5 --relative-only"
+export CXX=g++-6
+export GCOV="gcov-6 --relative-only"
