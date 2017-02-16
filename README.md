@@ -85,7 +85,6 @@ make coverage test00.out
 make coverage Forward_list_test
 make coverage test
 make coverage unittest
-make debug coverage test
 ```
 
 Distribution
